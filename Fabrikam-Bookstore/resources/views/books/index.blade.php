@@ -1,7 +1,7 @@
 @extends('layout/template')
 
 @section('content')
- <h1>Fabrikam Bookstore</h1>
+ <h1>Welcome to the online store</h1>
  <a href="{{url('/books/create')}}" class="btn btn-success">Create Book</a>
  <hr>
  <table class="table table-striped table-bordered table-hover">
