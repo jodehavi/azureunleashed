@@ -32,3 +32,11 @@ When the .env file is created, you can run the app using the following command:
 	php artisan serve
 
 This will launch a webserver and run the app locally - you should be able to browse to the app.
+
+
+To build and run the Docker application container run the following:
+
+	docker build -t bookstore .
+	docker run -dp 8000:8000 --net=host bookstore
+
+Note: --net=host tells docker to run the container on your host network (i.e. Host Hode) rather than the docker bridged network, which is the default.
