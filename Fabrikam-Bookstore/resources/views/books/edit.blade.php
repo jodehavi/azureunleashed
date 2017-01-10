@@ -23,6 +23,10 @@
         {!! Form::text('image',null,['class'=>'form-control']) !!}
     </div>
     <div class="form-group">
+        {!! Form::label('Price', 'Price:') !!}
+        {!! Form::text('price',null,['class'=>'form-control']) !!}
+    </div>
+    <div class="form-group">
         {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
     </div>
     {!! Form::close() !!}

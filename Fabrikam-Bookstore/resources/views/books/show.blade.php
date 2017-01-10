@@ -33,11 +33,27 @@
                 <input type="text" class="form-control" id="publisher" placeholder={{$book->publisher}} readonly>
             </div>
         </div>
+        <div class="form-group">
+            <label for="price" class="col-sm-2 control-label">Price</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="price" placeholder={{$book->price}} readonly>
+            </div>
+        </div>
 
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-1">
                 <a href="{{ url('books')}}" class="btn btn-primary">Back</a>
+            </div>
+
             </div>
         </div>
     </form>
+                <form action="/cart" method="POST">
+                {!! csrf_field() !!}
+                <input type="hidden" name="id" value="{{ $book->id }}">
+                <input type="hidden" name="name" value="{{ $book->title }}">
+                <input type="hidden" name="price" value="{{ $book->price }}">
+                <input type="submit" class="btn btn-success btn-lg" value="Add to Cart">
+            </form>
 @stop

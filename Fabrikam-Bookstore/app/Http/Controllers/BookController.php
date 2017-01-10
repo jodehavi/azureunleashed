@@ -93,4 +93,12 @@ class BookController extends Controller
       Book::find($id)->delete();
       return redirect('books');
    }
+   
+   public function addtocart($id)
+   {
+      //
+      $book=Book::find($id);
+      return redirect('cart.show');
+   }
+
 }

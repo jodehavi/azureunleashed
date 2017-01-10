@@ -14,5 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });*/
-Route::get('/', 'BookController@index');
+Route::resource('cart','CartController');
 Route::resource('books','BookController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
+Route::get('/', 'BookController@index');
+//Route::get('/cart', 'CartController@index');
