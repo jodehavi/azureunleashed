@@ -37,6 +37,7 @@ This will launch a webserver and run the app locally - you should be able to bro
 To build and run the Docker application container run the following from the same directory as the Dockerfile:
 
 	docker build -t bookstore .
-	docker run -dp 8000:8000 --net=host bookstore
+	docker run -dp 80:80 bookstore
 
-Note: --net=host tells docker to run the container on your host network (i.e. Host Hode) rather than the docker bridged network, which is the default.
+Note: If running locally, and your port 80 is already occupied, you can change the command as follows:
+	docker run -dp <preferredport>:80 bookstore
