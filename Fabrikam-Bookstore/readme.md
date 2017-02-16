@@ -34,7 +34,7 @@ When the .env file is created, you can run the app using the following command:
 This will launch a webserver and run the app locally - you should be able to browse to the app.
 
 
-To build and run the Docker application container run the following from the same directory as the Dockerfile:
+To build and run the Docker application container, edit the .env.example file to update with your DB connection info and then run the following from the same directory as the Dockerfile:
 
 	docker build -t bookstore .
 	docker run -dp 80:80 bookstore
