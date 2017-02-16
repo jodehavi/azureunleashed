@@ -40,4 +40,5 @@ To build and run the Docker application container run the following from the sam
 	docker run -dp 80:80 bookstore
 
 Note: If running locally, and your port 80 is already occupied, you can change the command as follows:
-	docker run -dp <preferredport>:80 bookstore
+
+	docker run -dp <yourPort>:80 bookstore
