@@ -1,5 +1,4 @@
-#Pull the latest composer image
-#FROM composer:latest
+#Pull the latest ubuntu image
 FROM ubuntu
 
 #Copy over th application folder and set it as the working directory
