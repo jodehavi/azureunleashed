@@ -7,7 +7,7 @@ WORKDIR /var/www/html/Fabrikam-Bookstore/
 
 #Update and Upgrade Ubuntu
 RUN apt-get update
-RUN apt-get upgrade -
+RUN apt-get upgrade -y
 
 #Install packages needed by the application
 RUN apt-get install -y apache2 \
