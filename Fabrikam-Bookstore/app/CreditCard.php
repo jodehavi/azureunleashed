@@ -15,10 +15,10 @@ class CreditCard extends Model
         'cardno', 'billingaddress', 'expdate',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo('App\User');
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo('App\User', 'id');
+    // }
 
     protected $table = 'creditcards';
 }

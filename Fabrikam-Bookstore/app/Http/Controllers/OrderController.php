@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\CreditCard;
+use App\Order;
 use App\User;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Request;
 
-class CardsController extends Controller
+class OrderController extends Controller
 {
      /**
     * Display a listing of the resource.
@@ -18,11 +18,9 @@ class CardsController extends Controller
     */
    public function index()
    {
-     
-       //$user = $user;
-        $user = Request::user();
-        $cards = $user->cards;
-       return view('cards.index', compact('cards'));
+     $user = Request::user();
+       $orders=$user->orders;  
+       return view('orders.index', compact('orders'));
     
    }
    /**
@@ -57,7 +55,6 @@ class CardsController extends Controller
     * @param  int  $id
     * @return Response
     */
-    
    public function destroy($id)
    {
       //

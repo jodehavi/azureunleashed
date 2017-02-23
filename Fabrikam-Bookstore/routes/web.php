@@ -16,7 +16,9 @@ Route::get('/', function () {
 });*/
 Route::resource('cart','CartController');
 Route::resource('books','BookController');
+Route::resource('cards','CardsController');
 Route::resource('checkout','CheckoutController');
+Route::resource('orders','OrderController');
 
 Auth::routes();
 

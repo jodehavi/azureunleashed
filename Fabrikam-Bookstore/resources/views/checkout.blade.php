@@ -23,7 +23,7 @@
                 <p>You seem to have no cards.</p>
             @endif
 
-            <p><a href="{{ url('cards') }}">Add new card</a></p>
+            <p><a href="{{ url('cards/create') }}">Add new card</a></p>
 
             @if (sizeof(Cart::content()) > 0)
 
