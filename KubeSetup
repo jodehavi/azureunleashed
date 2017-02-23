@@ -1,0 +1,43 @@
+#Run the Azure CLI Container
+docker run -it azuresdk/azure-cli-python:latest bash
+
+#First test if there is internet connectivity from the container. If not:
+sudo service docker stop
+sudo dockerd --dns=<localdns>
+
+#Create the resource group
+RESOURCE_GROUP=my-resource-group
+LOCATION=westus
+az group create --name=$RESOURCE_GROUP --location=$LOCATION
+
+#Generate the SSH Key pair used by ACS Create
+ssh-keygen
+
+#Login to Azure
+az login
+
+DNS_PREFIX=some-unique-value
+CLUSTER_NAME=any-acs-cluster-name
+az acs create --orchestrator-type=kubernetes --resource-group $RESOURCE_GROUP --name=$CLUSTER_NAME --dns-prefix=$DNS_PREFIX
+
+az acs kubernetes install-cli
+
+az acs kubernetes get-credentials --resource-group=$RESOURCE_GROUP --name=$CLUSTER_NAME
+
+kubectl get nodes
+
+#Optionally, if you are running in the CLI container you can exit and commit the containter image for future use.
+docker commit <conatinername> <imageName>
+docker run -it <imageName> bash
+
+
+kubectl run bookstore --image stevegriffith/bookstore
+kubectl get pods
+
+kubectl expose deployments bookstore --port=80 --type=LoadBalancer
+watch 'kubectl get svc'
+
+
+kubectl proxy --disable-filter
+http://localhost:8001/ui
+

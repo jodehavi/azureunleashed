@@ -16,10 +16,15 @@ Route::get('/', function () {
 });*/
 Route::resource('cart','CartController');
 Route::resource('books','BookController');
+Route::resource('cards','CardsController');
 Route::resource('checkout','CheckoutController');
+Route::resource('orders','OrderController');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::get('/', 'BookController@index');
-//Route::get('/cart', 'CartController@index');
+Route::get('/cart', 'CartController@index')->middleware('auth');
+Route::get('/cards', 'CardsController@index')->middleware('auth');
+Route::post('/cards', 'CardsController@store')->middleware('auth');
+Route::post('/checkout', 'CheckoutController@checkout')->middleware('auth');

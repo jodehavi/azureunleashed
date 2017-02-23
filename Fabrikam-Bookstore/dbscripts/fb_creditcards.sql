@@ -1,4 +1,6 @@
 
+USE fabrikam_bookstore;
+
 CREATE TABLE `creditcards` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
