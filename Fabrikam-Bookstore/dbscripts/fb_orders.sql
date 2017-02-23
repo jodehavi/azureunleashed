@@ -1,4 +1,6 @@
 
+USE fabrikam_bookstore;
+
 CREATE TABLE `orders` (
   `orderid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
@@ -6,7 +8,7 @@ CREATE TABLE `orders` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`orderid`),
-  FOREIGN KEY (`userid`) REFERENCES users(`id`)
+  FOREIGN KEY (`user_id`) REFERENCES users(`id`)
 );
 
 CREATE TABLE `orderdetails` (
@@ -17,6 +19,6 @@ CREATE TABLE `orderdetails` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`lineitemid`),
-  FOREIGN KEY (`orderid`) REFERENCES orders(`orderid`),
+  FOREIGN KEY (`order_id`) REFERENCES orders(`orderid`),
   FOREIGN KEY (`bookid`) REFERENCES books(`id`)
 );
