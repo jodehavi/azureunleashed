@@ -1,0 +1,178 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "allowedValues": [
+        "Central US",
+        "North Europe",
+        "East US",
+        "East US 2",
+        "North Central US",
+        "South Central US",
+        "West US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South",
+        "Australia East",
+        "Australia Southeast",
+        "Central India"
+      ]
+    },
+	"storageAccountName": {
+	  "type": "string"
+	},
+	"storageAccountType": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+	},	
+	"virtualNetworkName": {
+	  "type": "string"
+	},
+	"subnetName": {
+	  "type": "string"
+	},
+	"VMCount": {
+	  "type": "int"
+	},
+	"VMPrefix": {
+      "type": "string"
+	},
+	"adminUserName": {
+	  "type": "string"
+	},
+	"adminPassword": {
+	  "type": "string"
+	},
+	"VMSize": {
+	  "type": "string"
+	},
+	"ImagePublisher": {
+	  "type": "string"
+	},
+	"ImageOffer": {
+	  "type": "string"
+	},
+	"ImageSku": {
+	  "type": "string"
+	},
+	"RgGroupName": {
+	  "type": "string"
+	}
+  },
+  "variables": { 
+	"apiVersion": "2015-06-15"	
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('storageAccountName')]",
+      "apiVersion": "[variables('apiVersion')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "[parameters('storageAccountType')]"
+      }
+	}, 
+	{
+	  "apiVersion": "[variables('apiVersion')]",
+	  "type": "Microsoft.Network/publicIPAddresses",
+	  "name": "[concat(parameters('VMPrefix'), padLeft(string(add(copyIndex(), 1)), 2, '0'), '-pip')]",
+	  "location": "[resourceGroup().location]",
+	  "copy": {
+		"name": "CreatePips",
+		"count": "[parameters('VMCount')]"
+	  },
+	  "properties": {
+		  "publicIPAllocationMethod": "Static"
+	  }
+	},
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(parameters('VMPrefix'), padLeft(string(add(copyIndex(), 1)), 2, '0'), '-nic')]",
+      "location": "[parameters('location')]",
+	  "dependsOn": [
+		"CreatePips"
+	  ],
+      "copy": {
+        "name": "CreateNics",
+        "count": "[parameters('VMCount')]"
+      },	  
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "IPConfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('VMPrefix'), padLeft(string(add(copyIndex(), 1)), 2, '0'), '-pip'))]"
+              },
+              "subnet": {
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('RgGroupName'), '/providers/', 'Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'), '/subnets/', parameters('subnetName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+	
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('VMPrefix'), padLeft(string(add(copyIndex(), 1)), 2, '0'))]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "createVMs",
+        "count": "[parameters('VMCount')]"
+      },
+	  "dependsOn": [
+		"CreateNics",
+		"[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+	  ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('VMSize')]"
+        },
+        "osProfile": {
+          "computerName": "[concat(parameters('VMPrefix'), padLeft(string(add(copyIndex(), 1)), 2, '0'))]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('ImagePublisher')]",
+            "offer": "[parameters('ImageOffer')]",
+            "sku": "[parameters('ImageSku')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osDisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/vhds/', toLower(parameters('VMPrefix')), padLeft(string(add(copyIndex(), 1)), 2, '0'), '-os', '.vhd')]"
+            },
+            "caching": "ReadOnly",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/', concat(parameters('VMPrefix'), padLeft(string(add(copyIndex(), 1)), 2, '0'), '-nic'))]"
+            }
+          ]
+        }
+      }
+	}
+  ],
+  "outputs": { }
+ }

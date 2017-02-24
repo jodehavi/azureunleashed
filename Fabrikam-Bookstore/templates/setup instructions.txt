@@ -1,0 +1,62 @@
+# First if you haven't already, clone the repo from github
+
+# Next, using PowerShell login and set your context to the correct subscription and deploy the Ubuntu Server with the template from the repo
+
+# Using putty or WSL (Bash shell), use ssh-keygen to create a local SSH cert if you don't already have one
+ssh-keygen
+
+# copy that cert to the Ubuntu server using ssh-copy-id
+ssh-copy-id -i id_rsa.pub azureadmin@x.x.x.x
+
+# update repos
+sudo apt-get update
+
+# install MySQL
+sudo apt install mysql-server
+
+# we need to change MySQL to listen on the network IP Address (defaults to public loop back) - go to the conf file directory
+cd /etc/mysql/mysql.conf.d/
+
+# Notice here MySQL is listening on the loopback adapter
+cat mysqld.cnf | grep bind
+
+# Get the current IP address (write it down or copy it)
+ifconfig  
+
+# Use vi to change
+sudo vi mysqld.cnf
+/bind
+i
+[change to ip address from above]
+
+# verify
+cat mysqld.cnf | grep bind
+
+# restart service
+sudo service mysql restart
+
+# if you want to access remotely from Workbench, then you must get your IP and grant perms
+<search online>
+
+# grant perms to MySQL user (root) - if you want remote access - and to the correct ip range for the app servers
+mysql -u root -p
+Enter password: <enter password>
+mysql>GRANT ALL ON *.* to root@'y.y.y.y' IDENTIFIED BY 'put-your-password';
+mysql>GRANT ALL ON *.* to root@'10.23.1.%' IDENTIFIED BY ‘put-your-password’; 
+mysql>FLUSH PRIVILEGES;
+mysql>exit
+
+# You should now be able to access remotely
+try Workbench on your local machine
+
+# now copy the backup file over from your local repo (get into the directory via the bash shell w/ WSL)
+scp dbbkp.sql azureadmin@x.x.x.x:/home/azureadmin/bkp
+
+# ssh back into the system and restore the backup
+mysql -u root -p fabrikam_bookstore < /home/azureadmin/bkp/dbbkp.sql
+
+# verify the data has been loaded
+mysql -u root -p fabrikam_bookstore
+select * from books;
+
+# Also verify from Workbench installed on your system

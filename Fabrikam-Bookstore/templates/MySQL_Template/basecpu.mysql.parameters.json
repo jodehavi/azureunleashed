@@ -1,0 +1,49 @@
+	{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "East US 2"
+    },
+	"storageAccountName": {
+	  "value": "bookstoremysqlstor02"
+	},
+	"storageAccountType": {
+	  "value": "Standard_LRS"
+	},
+	"virtualNetworkName": {
+	  "value": "k8s-vnet-7D75367E"
+	},	
+	"subnetName": {
+	  "value": "databasesub"
+	},
+	"VMCount": {
+	  "value": 1
+	},
+	"VMPrefix": {
+	  "value": "bookstorek8mysql"
+	},
+	"adminUserName": {
+      "value": "azureadmin"
+	},
+	"adminPassword": {
+	  "value": "P@ssw0rd123!"
+	},
+	"VMSize": {
+	  "value": "Standard_DS2_v2"
+	},
+	"ImagePublisher": {
+	  "value": "Canonical"
+	},
+	"ImageOffer": {
+	  "value": "UbuntuServer"
+	},
+	"ImageSku": {
+	  "value": "16.04.0-LTS"
+	},
+	"RgGroupName": {
+	  "value": "Bookstore"
+	}	
+  }
+}
+
