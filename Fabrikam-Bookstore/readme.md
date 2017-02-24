@@ -2,19 +2,9 @@
 
 Simple php bookstore application that is built on top of the Laravel framework
 
-You need the following:
+Clone this repository and navigate into the Fabrikam-Bookstore folder. 
 
-* PHP 5.6.4 or greater installed.
-
-* MySQL database
-
-* Composer
-
-Clone this repository and navigate into the Fabrikam-Bookstore folder. This app uses composer to manage its packages so you will need to run:
-
-	composer install
-
-This will pull down the Laravel Framework and set it up within the app.
+Run setup.sh to install the required components and setup the application. This will pull down the Laravel Framework and set it up within the app.
 
 When that is complete, create a .env file at the root level (under Fabrikam-Bookstore). This file needs to contain your database connection information and should look like this:
 
@@ -25,13 +15,13 @@ When that is complete, create a .env file at the root level (under Fabrikam-Book
 	DB_USERNAME=homestead
 	DB_PASSWORD=secret
 
-The .env.example file can be used as a starting point.
+The .env.example file can be used as a starting point. You will need to update the values to point to your MySQL instance.
 
 When the .env file is created, you can run the app using the following command:
 
-	php artisan serve
+	php artisan serve --host=0.0.0.0
 
-This will launch a webserver and run the app locally - you should be able to browse to the app.
+This will launch a webserver and run the app locally at http://0.0.0.0:8000 - you should be able to browse to the app.
 
 
 To build and run the Docker application container, edit the .env.example file to update with your DB connection info and then run the following from the same directory as the Dockerfile:

@@ -12,31 +12,31 @@
         <div class="form-group">
             <label for="isbn" class="col-sm-2 control-label">ISBN</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="isbn" placeholder={{$book->isbn}} readonly>
+                <input type="text" size=0 class="form-control" id="isbn" value="{{$book->isbn}}" readonly>
             </div>
         </div>
         <div class="form-group">
             <label for="title" class="col-sm-2 control-label">Title</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="title" placeholder={{$book->title}} readonly>
+                <input type="text" class="form-control" id="title" value="{{$book->title}}" readonly>
             </div>
         </div>
         <div class="form-group">
             <label for="author" class="col-sm-2 control-label">Author</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="author" placeholder={{$book->author}} readonly>
+                <input type="text" class="form-control" id="author" value="{{$book->author}}" readonly>
             </div>
         </div>
         <div class="form-group">
             <label for="publisher" class="col-sm-2 control-label">Publisher</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="publisher" placeholder={{$book->publisher}} readonly>
+                <input type="text" class="form-control" id="publisher" value="{{$book->publisher}}" readonly>
             </div>
         </div>
         <div class="form-group">
             <label for="price" class="col-sm-2 control-label">Price</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="price" placeholder={{$book->price}} readonly>
+                <input type="text" class="form-control" id="price" value="{{$book->price}}" readonly>
             </div>
         </div>
 
