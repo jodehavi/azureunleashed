@@ -42,7 +42,7 @@ sudo service mysql restart
 mysql -u root -p
 Enter password: <enter password>
 mysql>GRANT ALL ON *.* to root@'y.y.y.y' IDENTIFIED BY 'put-your-password';
-mysql>GRANT ALL ON *.* to root@'10.23.1.%' IDENTIFIED BY ‘put-your-password’; 
+mysql>GRANT ALL ON *.* to root@'%' IDENTIFIED BY ‘put-your-password’; 
 mysql>FLUSH PRIVILEGES;
 mysql>exit
 
