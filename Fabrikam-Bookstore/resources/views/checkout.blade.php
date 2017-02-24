@@ -9,8 +9,7 @@
 
             <hr>
 
-            <h1>Cards</h1>
-            <select class="form-control m-bot15" name="role_id">
+            Choose a card: <select class="input-medium" name="role_id">
             @foreach ($cards as $card)
                 <option value="{{ $card->id }}">{{ $card->cardno }}</option>    
             @endforeach
@@ -77,8 +76,8 @@
                     </tbody>
                 </table>
                 
-                <a href="{{ url('/books') }}" class="btn btn-primary btn-lg">Cancel</a> &nbsp;
-                 <button type="submit" class="btn btn-primary">
+                <a href="{{ url('/books') }}" class="btn btn-primary">Cancel</a> &nbsp;
+                 <button type="submit" class="btn btn-success">
                                     Purchase
                                 </button>
             @else

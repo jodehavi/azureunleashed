@@ -1,10 +1,10 @@
 #!/bin/bash
 #Update and Upgrade Ubuntu
-sudo apt-get update
-sudo apt-get upgrade -y
+apt-get update
+apt-get upgrade -y
 
 #Install packages needed by the application
-sudo apt-get install -y apache2 \
+apt-get install -y apache2 \
       php \
       libapache2-mod-php \
       php-mcrypt \

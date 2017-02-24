@@ -41,19 +41,23 @@
         </div>
 
         <div class="form-group">
-        <div class="row">
+       
+
+            
+        </div>
+    </form>
+     <div class="row">
             <div class="col-sm-offset-2 col-sm-1">
                 <a href="{{ url('books')}}" class="btn btn-primary">Back</a>
             </div>
-
-            </div>
-        </div>
-    </form>
+             <div class="col-sm-1">
                 <form action="/cart" method="POST">
                 {!! csrf_field() !!}
                 <input type="hidden" name="id" value="{{ $book->id }}">
                 <input type="hidden" name="name" value="{{ $book->title }}">
                 <input type="hidden" name="price" value="{{ $book->price }}">
-                <input type="submit" class="btn btn-success btn-lg" value="Add to Cart">
+                <input type="submit" class="btn btn-success" value="Add to Cart">
             </form>
+            </div>
+            </div>
 @stop
