@@ -22,7 +22,7 @@ sudo apt-get install -y apache2 \
 
 logger "running composer"
 #Run the composer installation
-composer install
+sudo composer install
 
 snvar=$1
 uservar=$2
