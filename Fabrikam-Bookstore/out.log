@@ -1,0 +1,13 @@
+Downloading Azure CLI install script from https://azurecliprod.blob.core.windows.net/install.py to /tmp/azure_cli_install_tmp_j2bS.
+5.95
+/tmp/azure_cli_install_tmp_j2bS: OK
+Running install script.
+-- Verifying Python version.
+-- Python version 2.7.12 okay.
+-- Verifying native dependencies.
+-- Executing: 'dpkg -s libssl-dev libffi-dev python-dev build-essential'
+-- Native dependencies okay.
+
+===> In what directory would you like to place the install? (leave blank to use '/home/johndh/lib/azure-cli'): 
+
+Exiting...
