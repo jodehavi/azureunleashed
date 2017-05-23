@@ -12,7 +12,7 @@ sudo apt -y install docker.io
 logger "setup.sh - Installing curl"
 sudo apt -y install curl
 logger "setup.sh - Installing Azure CLI"
-sudo curl -L https://aka.ms/InstallAzureCli | bash
+sudo apt -y install azure-cli
 
 cd /var/www
 
