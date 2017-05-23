@@ -14,7 +14,7 @@ sudo apt -y install curl
 logger "setup.sh - Installing Azure CLI"
 sudo curl -L https://aka.ms/InstallAzureCli | bash
 
-cd ~
+cd /var/www
 
 git clone https://github.com/jodehavi/azureunleashed.git
 

@@ -22,7 +22,7 @@ sudo apt-get install -y apache2 \
 
 logger "running composer"
 #Run the composer installation
-composer install
+sudo composer install
 
 snvar=$1
 uservar=$2
@@ -52,6 +52,6 @@ mysql -h $snvar.mysql.database.azure.com -u $uservar@$snvar -p$passvar < dbscrip
 
 logger "generating app key"
 #Generate the app key requried to run the site
-php artisan key:generate
+sudo php artisan key:generate
 
 logger "done"
