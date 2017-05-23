@@ -1,5 +1,4 @@
 CREATE DATABASE fabrikam_bookstore;
-
 USE fabrikam_bookstore;
 
 CREATE TABLE `books` (
