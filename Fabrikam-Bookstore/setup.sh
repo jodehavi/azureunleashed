@@ -4,6 +4,8 @@
 #sudo apt-get upgrade -y
 
 logger "Starting app install script"
+cd /var/www/azureunleashed/Fabrikam-Bookstore/
+pwd
 
 #Install packages needed by the application
 sudo apt-get install -y apache2 \
@@ -51,7 +53,7 @@ mysql -h $snvar.mysql.database.azure.com -u $uservar@$snvar -p$passvar < dbscrip
 mysql -h $snvar.mysql.database.azure.com -u $uservar@$snvar -p$passvar < dbscripts/dbload.sql
 
 logger "generating app key"
-#Generate the app key requried to run the site
+#Generate the app key required to run the site
 sudo php artisan key:generate
 
 logger "done"
