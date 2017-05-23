@@ -14,10 +14,6 @@ sudo apt -y install curl
 logger "setup.sh - Installing Azure CLI"
 sudo apt -y install azure-cli
 
-cd /var/www
-
-echo $PWD
-
 git clone https://github.com/jodehavi/azureunleashed.git /var/www/azureunleashed
 
 sh /var/www/azureunleashed/Fabrikam-Bookstore/setup.sh $1 $2 $3

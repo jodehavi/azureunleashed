@@ -6,21 +6,26 @@
       "value": "eastus2"
     },
     "virtualMachineName": {
-      "value": "griffdemo1838"
+      "value": "jdhdemo2"
     },
     "virtualMachineSize": {
       "value": "Standard_D1"
     },
     "adminUsername": {
-      "value": "griffith"
+      "value": "johndh"
+    },
+    "dbAdminUsername": {
+      "value": "johndh"
+    },
+    "dbServerName": {
+	"value":"jdhtest2"
+    },
+    "dbAdminPassword": {
+	"value":"WelcomeHome1!"
+    },
+    "adminPassword": {
+	"value":"WelcomeHome1!"
     }
-    ,"adminPassword": {
-        "reference": {
-        "keyVault": {
-          "id": "/subscriptions/62afe9fc-190b-4f18-95ac-e5426017d4c8/resourceGroups/KeyVaultDemoRG/providers/Microsoft.KeyVault/vaults/GriffithKeyVault"
-        },
-        "secretName": "serverPasswd"
-      }
-    }
-  }
+ 
+ }
 }
