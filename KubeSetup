@@ -1,14 +1,9 @@
-#Run the Azure CLI Container
-docker run -it azuresdk/azure-cli-python:latest bash
-
-#First test if there is internet connectivity from the container. If not:
-sudo service docker stop
-sudo dockerd --dns=<localdns>
+#Login to your lab VM
 
 #Create the resource group
-RESOURCE_GROUP=my-resource-group
-LOCATION=westus
-az group create --name=$RESOURCE_GROUP --location=$LOCATION
+rg=my-resource-group
+loc=eastus2
+az group create --name=$rg --location=$loc
 
 #Generate the SSH Key pair used by ACS Create
 ssh-keygen
@@ -16,13 +11,13 @@ ssh-keygen
 #Login to Azure
 az login
 
-DNS_PREFIX=some-unique-value
-CLUSTER_NAME=any-acs-cluster-name
-az acs create --orchestrator-type=kubernetes --resource-group $RESOURCE_GROUP --name=$CLUSTER_NAME --dns-prefix=$DNS_PREFIX
+dnsprefix=some-unique-value
+
+az acs create --orchestrator-type=kubernetes --resource-group $RESOURCE_GROUP --name=$dnsprefix --dns-prefix=$dnsprefix
 
 az acs kubernetes install-cli
 
-az acs kubernetes get-credentials --resource-group=$RESOURCE_GROUP --name=$CLUSTER_NAME
+az acs kubernetes get-credentials --resource-group=$rg --name=$dnsprefix
 
 kubectl get nodes
 
