@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "eastus2"
+    },
+    "virtualMachineName": {
+      "value": "griffdemo1838"
+    },
+    "virtualMachineSize": {
+      "value": "Standard_D1"
+    },
+    "adminUsername": {
+      "value": "griffith"
+    }
+    ,"adminPassword": {
+        "reference": {
+        "keyVault": {
+          "id": "/subscriptions/62afe9fc-190b-4f18-95ac-e5426017d4c8/resourceGroups/KeyVaultDemoRG/providers/Microsoft.KeyVault/vaults/GriffithKeyVault"
+        },
+        "secretName": "serverPasswd"
+      }
+    }
+  }
+}
