@@ -13,8 +13,8 @@ sudo apt -y install git
 
 cd /var/www
 
-git clone https://github.com/jodehavi/azureunleashed.git
+echo $PWD
 
-cd azureunleashed/Fabrikam-Bookstore
+git clone https://github.com/jodehavi/azureunleashed.git /var/www/azureunleashed
 
-sh ./setup.sh $1 $2 $3
+sh /var/www/azureunleashed/Fabrikam-Bookstore/setup.sh $1 $2 $3

@@ -44,6 +44,7 @@
 		"administratorLogin":"[parameters('dbAdminUsername')]",
 		"administratorLoginPassword":"[parameters('dbAdminPassword')]",
 		"storageMB":"51200"
+		 "sslEnforcement": "Disabled"
 	 },
 	 "sku":{  
 		"name":"MYSQLB50",
