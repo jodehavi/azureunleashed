@@ -1,7 +1,9 @@
 #!/bin/bash
 #Update and Upgrade Ubuntu
-sudo apt-get update
-sudo apt-get upgrade -y
+#sudo apt-get update
+#sudo apt-get upgrade -y
+
+logger "Starting app install script"
 
 #Install packages needed by the application
 sudo apt-get install -y apache2 \
@@ -18,28 +20,16 @@ sudo apt-get install -y apache2 \
       curl \
       composer
 
+logger "running composer"
 #Run the composer installation
 composer install
 
-#get public ip
-ipaddr=$(curl ipinfo.io/ip)
-echo "Your ip address is $ipaddr"
+snvar=$1
+uservar=$2
+passvar=$3
 
-#setup mysql in azure
-#read -p 'admin username: ' uservar
-#read -p 'Resource Group Name: ' rgvar
-#read -p 'Server Name: ' snvar
-#read -sp 'Password: ' passvar
-rgvar=$1
-snvar=$2
-uservar=$3
-passvar=$4
+logger "creating env file"
 
-az login
-az group create --name $rgvar --location westus
-az mysql server create --resource-group $rgvar --name $snvar --location westus --admin-user $uservar --admin-password $passvar --performance-tier Basic --compute-units 50 --ssl-enforcement Disabled
-az mysql server firewall-rule create --resource-group $rgvar --server $snvar --name MyClientIp --start-ip-address $ipaddr --end-ip-address $ipaddr
-az mysql server show --resource-group $rgvar --name $snvar
 cat <<EOT > .env
 APP_ENV=local
 APP_KEY=
@@ -55,12 +45,13 @@ DB_USERNAME=$uservar@$snvar
 DB_PASSWORD=$passvar
 EOT
 
-
-echo "sleeping 1 minute to allow ip rules to process"
-sleep 1m # Waits 1 minutes
+logger "creating database"
 #populate the db
 mysql -h $snvar.mysql.database.azure.com -u $uservar@$snvar -p$passvar < dbscripts/master_setup.sql
 mysql -h $snvar.mysql.database.azure.com -u $uservar@$snvar -p$passvar < dbscripts/dbload.sql
 
+logger "generating app key"
 #Generate the app key requried to run the site
 php artisan key:generate
+
+logger "done"
