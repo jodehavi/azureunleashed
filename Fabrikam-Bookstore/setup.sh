@@ -52,6 +52,6 @@ mysql -h $snvar.mysql.database.azure.com -u $uservar@$snvar -p$passvar < dbscrip
 
 logger "generating app key"
 #Generate the app key requried to run the site
-php artisan key:generate
+sudo php artisan key:generate
 
 logger "done"

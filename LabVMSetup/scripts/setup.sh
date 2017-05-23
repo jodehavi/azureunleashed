@@ -11,7 +11,7 @@ logger  "setup.sh - Installing Docker"
 sudo apt -y install docker.io
 sudo apt -y install git
 
-cd ~
+cd /var/www
 
 git clone https://github.com/jodehavi/azureunleashed.git
 
