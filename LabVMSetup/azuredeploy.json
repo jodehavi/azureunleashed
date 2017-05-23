@@ -18,13 +18,57 @@
         },
         "adminPassword": {
             "type": "securestring"
-        }
+        },
+        "dbAdminUsername": {
+            "type": "string"
+        },
+        "dbAdminPassword": {
+            "type": "securestring"
+        },
+        "dbServerName": {
+            "type": "string"
+        }        
     },
     "variables": {
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks','LabVnet')]",
         "subnetRef": "[concat(variables('vnetID'),'/subnets/default')]"
     },
     "resources": [
+	 {  
+	 "apiVersion":"2016-02-01-privatepreview",
+	 "kind":"",
+	 "location":"westus",
+	 "name":"[parameters('dbServerName')]",
+	 "properties":{  
+		"version":"5.7",
+		"administratorLogin":"[parameters('dbAdminUsername')]",
+		"administratorLoginPassword":"[parameters('dbAdminPassword')]",
+		"storageMB":"51200"
+	 },
+	 "sku":{  
+		"name":"MYSQLB50",
+		"tier":"Basic",
+		"capacity":"50",
+		"size":"51200",
+		"family":"SkuFamily"
+	 },
+	 "type":"Microsoft.DBforMySQL/servers",
+	 "resources":[  
+		{  
+		   "type":"firewallrules",
+		   "apiVersion":"2016-02-01-privatepreview",
+		   "dependsOn":[  
+			  "[concat('Microsoft.DBforMySQL/servers/', parameters('dbServerName'))]"
+		   ],
+		   "location":"westus",
+		   "name":"[concat(parameters('dbServerName'),'firewall')]",
+		   "properties":{  
+			  "startIpAddress":"0.0.0.0",
+			  "endIpAddress":"255.255.255.255"
+		   }
+		}
+	 ]
+},
         {
             "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
@@ -168,8 +212,8 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "bash setup.sh"
-        }
+        	"commandToExecute": "[concat('bash setup.sh ', parameters('dbServerName'), ' ', parameters('dbAdminUsername'), ' ', parameters('dbAdminPassword'))]"
+	}
       }
     }
     ]
