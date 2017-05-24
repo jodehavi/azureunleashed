@@ -1,30 +1,62 @@
 #Login to your lab VM
+ssh <username>@<PublicIP>
 
-#Create the resource group
-rg=my-resource-group
-loc=eastus2
+##########################################
+# Create the resource group 
+# (Skip az group create if using existing)
+##########################################
+rg=<Resource Group Name>
+loc=<Location - ex. eastus2>
 az group create --name=$rg --location=$loc
 
-#Generate the SSH Key pair used by ACS Create
+##########################################
+# Generate the SSH Key pair used by ACS Create
+##########################################
 ssh-keygen
 
-#Login to Azure
+##########################################
+# Login to Azure
+##########################################
 az login
 
-dnsprefix=some-unique-value
+##########################################
+# Create Kubernetes Cluster
+##########################################
+
+dnsprefix=<Some Unique Name>
 
 az acs create --orchestrator-type=kubernetes --resource-group $RESOURCE_GROUP --name=$dnsprefix --dns-prefix=$dnsprefix
 
-az acs kubernetes install-cli
+sudo az acs kubernetes install-cli
 
 az acs kubernetes get-credentials --resource-group=$rg --name=$dnsprefix
 
 kubectl get nodes
 
-#Optionally, if you are running in the CLI container you can exit and commit the containter image for future use.
-docker commit <conatinername> <imageName>
-docker run -it <imageName> bash
+##########################################
+# Create Azure Container Registry
+##########################################
+registryname=<Registry Name>
+az acr create -n $registryname -g $rg -l $loc --sku Basic
 
+# Setting admin mode for authentication. (Not recommended for production) 
+az acr update -n $registryname --admin-enabled true
+
+##########################################
+# Build and Push Docker Image
+#
+# First retrieve registry credentials from 
+# Azure portal under 'Access Keys' in your
+# registry.
+##########################################
+cd /var/www/azureunleashed
+
+sudo docker login <registry login server>
+####John...I left off here
+
+##########################################
+# Deploy Bookstore to Kubernetes
+##########################################
 
 kubectl run bookstore --image stevegriffith/bookstore
 kubectl get pods
