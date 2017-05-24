@@ -20,7 +20,8 @@ sudo apt-get install -y apache2 \
       mcrypt \
       php-mysql \
       curl \
-      composer
+      composer \
+      mysql-client-core-5.7
 
 logger "running composer"
 #Run the composer installation

@@ -76,7 +76,8 @@
             "apiVersion": "2016-04-30-preview",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', 'LabNIC')]"
+                "[concat('Microsoft.Network/networkInterfaces/', 'LabNIC')]",
+                "[concat('Microsoft.DBforMySQL/servers/', parameters('dbServerName'))]"
             ],
             "properties": {
                 "osProfile": {
@@ -185,6 +186,19 @@
                             "sourceAddressPrefix": "*",
                             "protocol": "TCP",
                             "destinationPortRange": "22",
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "allow-web",
+                        "properties": {
+                            "priority": 1001,
+                            "sourceAddressPrefix": "*",
+                            "protocol": "TCP",
+                            "destinationPortRange": "8000",
                             "access": "Allow",
                             "direction": "Inbound",
                             "sourcePortRange": "*",
