@@ -2,6 +2,11 @@
 ssh <username>@<PublicIP>
 
 ##########################################
+# Login to Azure
+##########################################
+az login
+
+##########################################
 # Create the resource group 
 # (Skip az group create if using existing)
 ##########################################
@@ -15,17 +20,12 @@ az group create --name=$rg --location=$loc
 ssh-keygen
 
 ##########################################
-# Login to Azure
-##########################################
-az login
-
-##########################################
 # Create Kubernetes Cluster
 ##########################################
 
 dnsprefix=<Some Unique Name>
 
-az acs create --orchestrator-type=kubernetes --resource-group $RESOURCE_GROUP --name=$dnsprefix --dns-prefix=$dnsprefix
+az acs create --orchestrator-type=kubernetes --resource-group $rg --name=$dnsprefix --dns-prefix=$dnsprefix
 
 sudo az acs kubernetes install-cli
 
@@ -52,13 +52,34 @@ az acr update -n $registryname --admin-enabled true
 cd /var/www/azureunleashed
 
 sudo docker login <registry login server>
-####John...I left off here
+
+sudo docker build -t <registry login server>/bookstore .
+sudo docker push <registry login server>/bookstore
 
 ##########################################
 # Deploy Bookstore to Kubernetes
 ##########################################
 
-kubectl run bookstore --image stevegriffith/bookstore
+kubectl create secret docker-registry regsecret --docker-server=<registry login server> --docker-username=<registry username> --docker-password=<registry password> --docker-email=<your-email>
+kubectl create secret docker-registry regsecret --docker-server="griffacr.azurecr.io" --docker-username="griffacr" --docker-password="V===/++/Gss/+B/+H+4=ku+/Ww+ZLVFX" --docker-email="stgriffi@microsoft.com"
+
+sudo vi bookstore.yaml
+
+#Paste and enter the following
+apiVersion: v1
+kind: Pod
+metadata:
+        name: bookstore
+spec:
+        containers:
+                - name: bookstore
+                  image: <registry login server>/bookstore
+        imagePullSecrets:
+                - name: regsecret
+##############################
+
+kubectl create -f bookstore.yaml
+kubectl run bookstore --image <registry login server>/bookstore
 kubectl get pods
 
 kubectl expose deployments bookstore --port=80 --type=LoadBalancer
