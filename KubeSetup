@@ -25,7 +25,7 @@ ssh-keygen
 
 dnsprefix=<Some Unique Name>
 
-az acs create --orchestrator-type=kubernetes --resource-group $rg --name=$dnsprefix --dns-prefix=$dnsprefix
+az acs create --orchestrator-type=kubernetes --resource-group=$rg --name=$dnsprefix --dns-prefix=$dnsprefix
 
 sudo az acs kubernetes install-cli
 
