@@ -128,12 +128,12 @@ The following steps will walk you through the process of moving the MySQL DB int
 $ kubectl create secret generic mysql --from-literal=password=YOUR_PASSWORD
 ```
 
-2) Create an empty disk in an azure storage account for mysql mounting
+2) Run the following docker commands to pull the azure-tools image and start it up
 ```
 $ docker pull docker.io/colemickens/azure-tools:latest
 $ docker run -it docker.io/colemickens/azure-tools:latest
 ```
-3) Execute the following commands inside the container
+3) Execute the following commands inside the container to create the empty disk for mysql
 ```
 $ export AZURE_SUBSCRIPTION_ID=<your_subscription_id>
 $ export AZURE_RESOURCE_GROUP=<resource_group_name>
@@ -155,7 +155,7 @@ $ ./make-vhd.sh
 ```
 $ kubectl delete deployment bookstore
 ```
-10) Repush updated app
+10) Repush updated web app container
 ```
 $ docker build -t <registryname>.azurecr.io/bookstore .
 $ docker push <registryname>.azurecr.io/bookstore
@@ -163,6 +163,11 @@ $ docker push <registryname>.azurecr.io/bookstore
 11) Deploy the bookstore with MySQL to your cluster
 ```
 $ kubectl create -f bookstore-mysql.yaml
+$ kubectl get pods
+```
+12) Re-deploy the bookstore web app to your cluster
+```
+$ kubectl create -f bookstore.yaml
 $ kubectl get pods
 ```
 

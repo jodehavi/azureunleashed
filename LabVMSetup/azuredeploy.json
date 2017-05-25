@@ -43,7 +43,8 @@
 		"version":"5.7",
 		"administratorLogin":"[parameters('dbAdminUsername')]",
 		"administratorLoginPassword":"[parameters('dbAdminPassword')]",
-		"storageMB":"51200"
+		"storageMB":"51200",
+		"sslEnforcement": "Disabled"
 	 },
 	 "sku":{  
 		"name":"MYSQLB50",
@@ -75,7 +76,8 @@
             "apiVersion": "2016-04-30-preview",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', 'LabNIC')]"
+                "[concat('Microsoft.Network/networkInterfaces/', 'LabNIC')]",
+                "[concat('Microsoft.DBforMySQL/servers/', parameters('dbServerName'))]"
             ],
             "properties": {
                 "osProfile": {
@@ -189,6 +191,19 @@
                             "sourcePortRange": "*",
                             "destinationAddressPrefix": "*"
                         }
+                    },
+                    {
+                        "name": "allow-web",
+                        "properties": {
+                            "priority": 1001,
+                            "sourceAddressPrefix": "*",
+                            "protocol": "TCP",
+                            "destinationPortRange": "8000",
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*"
+                        }
                     }
                 ]
             }
@@ -212,7 +227,7 @@
           ]
         },
         "protectedSettings": {
-        	"commandToExecute": "[concat('bash setup.sh ', parameters('dbServerName'), ' ', parameters('dbAdminUsername'), ' ', parameters('dbAdminPassword'), ' ', parameters('adminUsername'))]"
+        	"commandToExecute": "[concat('bash setup.sh ', parameters('dbServerName'), ' ', parameters('dbAdminUsername'), ' ', parameters('dbAdminPassword'), ' ', parameters('adminPassword'))]"
 	}
       }
     }
