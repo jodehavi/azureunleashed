@@ -22,15 +22,16 @@ RUN apt-get install -y apache2 \
       mcrypt \
       php-mysql \
       curl
-RUN curl -sS https://getcomposer.org/installer | php
-RUN mv composer.phar /usr/local/bin/composer
-RUN chmod +x /usr/local/bin/composer
+
+#RUN curl -sS https://getcomposer.org/installer | php
+#RUN mv composer.phar /usr/local/bin/composer
+#RUN chmod +x /usr/local/bin/composer
 
 #Run the composer installation
-RUN composer install
+#RUN composer install
 
 #Generate the app key requried to run the site
-RUN php artisan key:generate
+#RUN php artisan key:generate
 
 #Expose the application http server port
 EXPOSE 80
