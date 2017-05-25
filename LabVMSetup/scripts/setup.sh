@@ -8,7 +8,7 @@ sudo apt update
 logger  "setup.sh - Installing Git"
 sudo apt -y install git
 
-logger  "setup.sh - Installing Docker"
+logger  "setup.sh - Installing Docker for user " + $4
 sudo apt -y install docker.io
 sudo gpasswd -a $4 docker
 
