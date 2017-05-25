@@ -21,25 +21,25 @@ The following steps will run through the process of creating a Kubernetes cluste
 
 1) SSH into your VM `ssh <username>@<PublicIP>`
 2) Login to Azure via the CLI using `az login`
-3) Define bash variables for your resource group, cluster DNS name and deployment location. (**Note**: If you with to place everything in the same resource group as your Lab VM, then set that resource group name here.)
+3) Define bash variables for your resource group, cluster DNS name and deployment location. (**Note**: If you wish to place everything in the same resource group as your Lab VM, then set that resource group name here.)
 ```
 $rg=<Resource Group Name>
 $dnsprefix=<Some Unique Name>
 $loc=<Location - ex. eastus2>
 ```
-4) Create the resource group, if not reusing from your LabVM deployment
+4) Create the resource group, if not reusing from your LabVM deployment. If reusing, then this step can be skipped.
 ```    
-az group create --name=$rg --location=$loc
+$az group create --name=$rg --location=$loc
 ```
 5) Generate an ssh key, using all defaults
 ```
-ssh-keygen
+$ssh-keygen
 ```
 6) Create the cluster
 ```
-az acs create --orchestrator-type=kubernetes --resource-group=$rg --name=$dnsprefix --dns-prefix=$dnsprefix
+$az acs create --orchestrator-type=kubernetes --resource-group=$rg --name=$dnsprefix --dns-prefix=$dnsprefix
 ```
-7) Install the kuberenetes command line (kubectl)
+7) Install the kuberenetes command line `kubectl` (**Note:** This will take around 5 minutes to complete)
 ```
 $sudo az acs kubernetes install-cli
 ```
@@ -80,16 +80,16 @@ $cd /var/www/azureunleashed
 ```
 3) Login to your private repository using the login server, user ID and password from the 'Access Keys' pane in your ACR portal
 ```
-$docker login <registry login server>
+$docker login <registryname>.azurecr.io
 ```
 4) Review the DockerFile file in the application folder. This is the file Docker will use to build the container image.
 5) Execute the `docker build` command to build your container image. **Note**: The first part of the container image name MUST be your container registry fully qualified name (i.e. myregistry.azurecr.io)
 ```
-$docker build -t <registry login server>/bookstore .
+$docker build -t <registryname>.azurecr.io/bookstore .
 ```
 6) Push your newly created image to your private Azure Container Registry
 ```
-$docker push <registry login server>/bookstore
+$docker push <registryname>.azurecr.io/bookstore
 ```
 
 ## Deploy Bookstore to Kubernetes
@@ -97,9 +97,9 @@ The following steps will walk you through deployment of your container image int
 
 1) Create the secret on your kuberentes cluster containing your container registry credentials
 ```
-$kubectl create secret docker-registry regsecret --docker-server=<registry login server> --docker-username=<registry username> --docker-password=<registry password> --docker-email=<your-email>
+$kubectl create secret docker-registry regsecret --docker-server=<registryname>.azurecr.io --docker-username=<registry username> --docker-password=<registry password> --docker-email=<your-email>
 ```
-2) In the application folder you shoudl see a file named `bookstore.yaml`. This is the file that describes to kubernetes what we want to deploy. Mofify (`sudo nano bookstore.yaml` or `sudo vi bookstore.yaml`) this file so that the `image` name matches your registry name (i.e. `<registry login server>/bookstore`)
+2) In the application folder you should see a file named `bookstore.yaml`. This is the file that describes to kubernetes what we want to deploy. Modify (`sudo nano bookstore.yaml` or `sudo vi bookstore.yaml`) this file so that the `image` name matches your registry name (i.e. `<registryname>.azurecr.io/bookstore`). Save and exit.
 3) Execute `kubectl create` to create the deployment
 ```
 $kubectl create -f bookstore.yaml
@@ -157,8 +157,8 @@ kubectl delete deployment bookstore
 ```
 10) Repush updated app
 ```
-docker build -t <registry login server>/bookstore .
-docker push <registry login server>/bookstore
+docker build -t <registryname>.azurecr.io/bookstore .
+docker push <registryname>.azurecr.io/bookstore
 ```
 11) Deploy the bookstore with MySQL to your cluster
 ```
