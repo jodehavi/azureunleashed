@@ -51,10 +51,10 @@ az acr update -n $registryname --admin-enabled true
 ##########################################
 cd /var/www/azureunleashed
 
-sudo docker login <registry login server>
+docker login <registry login server>
 
-sudo docker build -t <registry login server>/bookstore .
-sudo docker push <registry login server>/bookstore
+docker build -t <registry login server>/bookstore .
+docker push <registry login server>/bookstore
 
 ##########################################
 # Deploy Bookstore to Kubernetes
