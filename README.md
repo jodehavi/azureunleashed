@@ -12,37 +12,56 @@ The following steps will run through the process of creating a Kubernetes cluste
 
 1) SSH into your VM `ssh <username>@<PublicIP>`
 2) Login to Azure via the CLI using `az login`
-3) Define bash variables for your resource group and deployment location. (Note: If you with to place everything in the same resource group as your Lab VM, then set that resource group name here.)
-    rg=<Resource Group Name>
-    loc=<Location - ex. eastus2>
+3) Define bash variables for your resource group, cluster DNS name and deployment location. (Note: If you with to place everything in the same resource group as your Lab VM, then set that resource group name here.)
+```
+$rg=<Resource Group Name>
+$dnsprefix=<Some Unique Name>
+$loc=<Location - ex. eastus2>
+```
 4) Create the resource group, if not reusing from your LabVM deployment
-    az group create --name=$rg --location=$loc
+```    
+az group create --name=$rg --location=$loc
+```
 5) Generate an ssh key, using all defaults
-    ssh-keygen
-
-##########################################
-# Create Kubernetes Cluster
-##########################################
-
-dnsprefix=<Some Unique Name>
-
+```
+ssh-keygen
+```
+6) Create the cluster
+```
 az acs create --orchestrator-type=kubernetes --resource-group=$rg --name=$dnsprefix --dns-prefix=$dnsprefix
-
-sudo az acs kubernetes install-cli
-
+```
+7) Install the kuberenetes command line (kubectl)
+```
+$sudo az acs kubernetes install-cli
+```
+8) Get your kubernetes cluster credentials from ACS
+```
 az acs kubernetes get-credentials --resource-group=$rg --name=$dnsprefix
-
+```
+9) Test that your cluster is working
+```
 kubectl get nodes
+```
 
-##########################################
-# Create Azure Container Registry
-##########################################
-registryname=<Registry Name>
-az acr create -n $registryname -g $rg -l $loc --sku Basic
+## Create an Azure Container Registry
+The following steps will walk you through the setup of an Azure Container Registry. ACR is a private container registry which we will use to store (push) and retrieve (pull) the bookstore container image. For our purposes we will enable the admin password, which will be more straight forward for this lab, however in production you would likely leverage a service principal instead. 
 
-# Setting admin mode for authentication. (Not recommended for production) 
-az acr update -n $registryname --admin-enabled true
+Note: The following steps assume you're in the same termal session as the prior section. If you have exited you will need to set the variables noted in the kuberentes setup again.
 
+ 1) Set the variable used for the Azure Container Registry name
+```
+$registryname=<Registry Name>
+```
+2) Execute the CLI call to create the registry
+```
+$az acr create -n $registryname -g $rg -l $loc --sku Basic
+```
+3) Enable admin mode to allow the use of the admin password rather than using a service principal
+```
+$az acr update -n $registryname --admin-enabled true
+```
+
+## Build and Push Docker Image
 ##########################################
 # Build and Push Docker Image
 #
