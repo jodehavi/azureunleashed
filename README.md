@@ -6,7 +6,16 @@ Artifacts for the Azure Unleashed Sessions - reference architecture and guidance
     This is a bookstore application. Built in PHP using the Laravel Framework. Backend is a MySQL Database.
 
     Details on how to setup the initial bookstore app are [here](Fabrikam-Bookstore/readme.md)
-    
+
+## Deploy Lab VM
+This template will deploy the lab vm with all required components pre-installed (git, docker, azure cli 2.0, etc)
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjodehavi%2Fazureunleashed%2Fmaster%2FLabVMSetup%2Fazuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
+
+   
 ## Kubernetes Setup  
 The following steps will run through the process of creating a Kubernetes cluster on Azure Container Service using the Azure CLI 2.0
 
@@ -62,48 +71,70 @@ $az acr update -n $registryname --admin-enabled true
 ```
 
 ## Build and Push Docker Image
-##########################################
-# Build and Push Docker Image
-#
-# First retrieve registry credentials from 
-# Azure portal under 'Access Keys' in your
-# registry.
-##########################################
-cd /var/www/azureunleashed
+The following steps will walk you through the process of building a container image using a Dockerfile, and then pushing that image to the private repository you created in the previous section.
 
-docker login <registry login server>
+1) Log into your Azure portal, go to your resource group, select your container registry and then select the 'Access Keys' pane. You should see all of the credential information needed for the following steps.
+2) Change directories into the bookstore application directory
+```
+$cd /var/www/azureunleashed
+```
+3) Login to your private repository using the login server, user ID and password from the 'Access Keys' pane in your ACR portal
+```
+$docker login <registry login server>
+```
+4) Review the DockerFile file in the application folder. This is the file Docker will use to build the container image.
+5) Execute the `docker build` command to build your container image. Note: The first part of the container image name MUST be your container registry fully qualified name (i.e. myregistry.azurecr.io)
+```
+$docker build -t <registry login server>/bookstore .
+```
+6) Push your newly created image to your private Azure Container Registry
+```
+$docker push <registry login server>/bookstore
+```
 
-docker build -t <registry login server>/bookstore .
-docker push <registry login server>/bookstore
+## Deploy Bookstore to Kubernetes
+The following steps will walk you through deployment of your container image into your kubernetes cluster. As we are using a private container registry, you will need to first tell kubernetes the credentials for that registry using the `kubectl create secret` command. You will then reference that secret in the yaml file used for the deployment.
 
-##########################################
-# Deploy Bookstore to Kubernetes
-##########################################
+1) Create the secret on your kuberentes cluster containing your container registry credentials
+```
+$kubectl create secret docker-registry regsecret --docker-server=<registry login server> --docker-username=<registry username> --docker-password=<registry password> --docker-email=<your-email>
+```
+2) In the application folder you shoudl see a file named `bookstore.yaml`. This is the file that describes to kubernetes what we want to deploy. Mofify (`sudo nano bookstore.yaml` or `sudo vi bookstore.yaml`) this file so that the `image` name matches your registry name (i.e. `<registry login server>/bookstore`)
+3) Execute `kubectl create` to create the deployment
+```
+$kubectl create -f bookstore.yaml
+```
+4) Verify that the deployment completed.
+```
+$kubectl get pods
+or
+$watch 'kubectl get pods'
+```
+5) Use `kubectl expose` to expose your deployment through the kuberentes integrated Azure Load Balancer
+```
+$kubectl expose deployments bookstore --port=80 --type=LoadBalancer
+```
+6) Watch the deployment to see the public IP populate. This may take a few minutes
+```
+$watch 'kubectl get svc'
+```
+7) Go to a browser and navigate to the public IP address from step 6
 
-kubectl create secret docker-registry regsecret --docker-server=<registry login server> --docker-username=<registry username> --docker-password=<registry password> --docker-email=<your-email>
+## MySQL in a container
+The following steps will walk you through the process of moving the MySQL DB into a container and deploying it to your kubernetes cluster
 
-#Edit the bookstore.yaml file updating with your container name <registry login server>/bookstore
-
-kubectl create -f bookstore.yaml
-kubectl get pods
-
-kubectl expose deployments bookstore --port=80 --type=LoadBalancer
-watch 'kubectl get svc'
-
-
-##########################################
-# MySQL in a container
-##########################################
-
-#create mysql password for root
+1) Create mysql password for root
+```
 kubectl create secret generic mysql --from-literal=password=YOUR_PASSWORD
+```
 
-#create an empty disk in an azure storage account for mysql mounting
+2) Create an empty disk in an azure storage account for mysql mounting
+```
 docker pull docker.io/colemickens/azure-tools:latest
-docker run -it docker.io/colemickens/azure-tools:latest
-
-# (inside the container)
-
+docker run -it docker.io/colemickens/azure-tools:latest bash
+```
+3) Execute the following commands inside the container
+```
 export AZURE_SUBSCRIPTION_ID=<your_subscription_id>
 export AZURE_RESOURCE_GROUP=<resource_group_name>
 export AZURE_STORAGE_ACCOUNT=<name_of_storage_account>
@@ -114,24 +145,24 @@ export AZURE_LOCATION=westus
 ./make-vhd.sh
 # VHD_URL=https://colemickvhds2.blob.core.windows.net/colemickvhds2/data-disk-082916103645.vhd
 # (end)
-
-
-#update bookstore-mysql.yaml replacing storage account name and vhd url
-#update .env under Fabrikam-Bookstore to the following:
-#set servername to mysqlpod
-#set user to root
-#set password to the one you set earlier
-
-
-#remove bookstore deployments
+```
+4) Update bookstore-mysql.yaml replacing storage account name and vhd url
+5) Update .env under Fabrikam-Bookstore to the following:
+6) Set servername to mysqlpod
+7) Set user to root
+8) Set password to the one you set earlier
+9) Remove bookstore deployments
+```
 kubectl delete deployment bookstore
-
-#repush updated app
-
+```
+10) Repush updated app
+```
 docker build -t <registry login server>/bookstore .
 docker push <registry login server>/bookstore
-
+```
+11) Deploy the bookstore with MySQL to your cluster
+```
 kubectl create -f bookstore-mysql.yaml
 kubectl get pods
-
+```
 
