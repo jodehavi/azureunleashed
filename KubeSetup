@@ -71,3 +71,48 @@ kubectl expose deployments bookstore --port=80 --type=LoadBalancer
 watch 'kubectl get svc'
 
 
+##########################################
+# MySQL in a container
+##########################################
+
+#create mysql password for root
+kubectl create secret generic mysql --from-literal=password=YOUR_PASSWORD
+
+#create an empty disk in an azure storage account for mysql mounting
+docker pull docker.io/colemickens/azure-tools:latest
+docker run -it docker.io/colemickens/azure-tools:latest
+
+# (inside the container)
+
+export AZURE_SUBSCRIPTION_ID=<your_subscription_id>
+export AZURE_RESOURCE_GROUP=<resource_group_name>
+export AZURE_STORAGE_ACCOUNT=<name_of_storage_account>
+export AZURE_STORAGE_CONTAINER=<vhd_container_name>
+export IMAGE_SIZE=10G
+export AZURE_LOCATION=westus
+
+./make-vhd.sh
+# VHD_URL=https://colemickvhds2.blob.core.windows.net/colemickvhds2/data-disk-082916103645.vhd
+# (end)
+
+
+#update bookstore-mysql.yaml replacing storage account name and vhd url
+#update .env under Fabrikam-Bookstore to the following:
+#set servername to mysqlpod
+#set user to root
+#set password to the one you set earlier
+
+
+#remove bookstore deployments
+kubectl delete deployment bookstore
+
+#repush updated app
+
+docker build -t <registry login server>/bookstore .
+docker push <registry login server>/bookstore
+
+kubectl create -f bookstore-mysql.yaml
+kubectl get pods
+
+
+
