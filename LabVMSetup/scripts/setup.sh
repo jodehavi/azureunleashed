@@ -10,6 +10,7 @@ sudo apt -y install git
 
 logger  "setup.sh - Installing Docker"
 sudo apt -y install docker.io
+sudo gpasswd -a $4 docker
 
 logger "setup.sh - Installing curl"
 sudo apt -y install curl
