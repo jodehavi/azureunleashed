@@ -21,7 +21,7 @@ The following steps will run through the process of creating a Kubernetes cluste
 
 1) SSH into your VM `ssh <username>@<PublicIP>`
 2) Login to Azure via the CLI using `az login`
-3) Define bash variables for your resource group, cluster DNS name and deployment location. (Note: If you with to place everything in the same resource group as your Lab VM, then set that resource group name here.)
+3) Define bash variables for your resource group, cluster DNS name and deployment location. (**Note**: If you with to place everything in the same resource group as your Lab VM, then set that resource group name here.)
 ```
 $rg=<Resource Group Name>
 $dnsprefix=<Some Unique Name>
@@ -55,7 +55,7 @@ kubectl get nodes
 ## Create an Azure Container Registry
 The following steps will walk you through the setup of an Azure Container Registry. ACR is a private container registry which we will use to store (push) and retrieve (pull) the bookstore container image. For our purposes we will enable the admin password, which will be more straight forward for this lab, however in production you would likely leverage a service principal instead. 
 
-Note: The following steps assume you're in the same termal session as the prior section. If you have exited you will need to set the variables noted in the kuberentes setup again.
+**Note**: The following steps assume you're in the same termal session as the prior section. If you have exited you will need to set the variables noted in the kuberentes setup again.
 
  1) Set the variable used for the Azure Container Registry name
 ```
@@ -83,7 +83,7 @@ $cd /var/www/azureunleashed
 $docker login <registry login server>
 ```
 4) Review the DockerFile file in the application folder. This is the file Docker will use to build the container image.
-5) Execute the `docker build` command to build your container image. Note: The first part of the container image name MUST be your container registry fully qualified name (i.e. myregistry.azurecr.io)
+5) Execute the `docker build` command to build your container image. **Note**: The first part of the container image name MUST be your container registry fully qualified name (i.e. myregistry.azurecr.io)
 ```
 $docker build -t <registry login server>/bookstore .
 ```
