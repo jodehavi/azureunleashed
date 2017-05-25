@@ -34,5 +34,5 @@ spec:
   volumes:
   - name: azure
     azureDisk:
-      diskName: data-disk-052417233255.vhd
-      diskURI: https://tjc6ysg5tzr4wmstr0.blob.core.windows.net/vhds/data-disk-052417233255.vhd
+      diskName: <name_of_vhd>.vhd
+      diskURI: https://<storage_account_name>.blob.core.windows.net/vhds/<name_of_vhd>.vhd
