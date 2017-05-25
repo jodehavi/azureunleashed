@@ -29,9 +29,6 @@ RUN chmod +x /usr/local/bin/composer
 #Run the composer installation
 RUN composer install
 
-#Rename the .env.example file to server as the .env file
-RUN mv .env.example .env
-
 #Generate the app key requried to run the site
 RUN php artisan key:generate
 
