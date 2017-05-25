@@ -131,7 +131,7 @@ $ kubectl create secret generic mysql --from-literal=password=YOUR_PASSWORD
 2) Create an empty disk in an azure storage account for mysql mounting
 ```
 $ docker pull docker.io/colemickens/azure-tools:latest
-$ docker run -it docker.io/colemickens/azure-tools:latest bash
+$ docker run -it docker.io/colemickens/azure-tools:latest
 ```
 3) Execute the following commands inside the container
 ```
