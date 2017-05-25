@@ -7,12 +7,12 @@ spec:
  template:
   metadata:
    labels:
-   app: bookstore
+    app: bookstore
   spec:
    containers:
     - name: bookstore
-    image: <repository server>/bookstore:latest
-    ports:
-     - containerPort: 80
-    imagePullSecrets:
-     - name: regsecret
+      image: <repository server>/bookstore:latest
+      ports:
+       - containerPort: 80
+   imagePullSecrets:
+    - name: regsecret
