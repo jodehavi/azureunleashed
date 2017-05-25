@@ -227,7 +227,7 @@
           ]
         },
         "protectedSettings": {
-        	"commandToExecute": "[concat('bash setup.sh ', parameters('dbServerName'), ' ', parameters('dbAdminUsername'), ' ', parameters('dbAdminPassword'), ' ', parameters('adminPassword'))]"
+        	"commandToExecute": "[concat('bash setup.sh ', parameters('dbServerName'), ' ', parameters('dbAdminUsername'), ' ', parameters('dbAdminPassword'), ' ', parameters('adminUsername'))]"
 	}
       }
     }
