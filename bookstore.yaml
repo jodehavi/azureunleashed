@@ -1,18 +1,18 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-        name: bookstore
+ name: bookstore
 spec:
-        replicas: 1
-        template:
-                metadata:
-                        labels:
-                                app: bookstore
-                spec:
-                        containers:
-                                - name: bookstore
-                                  image: <repository server>/bookstore:latest
-                                  ports:
-                                        - containerPort: 80
-                        imagePullSecrets:
-                                - name: regsecret
+ replicas: 1
+ template:
+  metadata:
+   labels:
+   app: bookstore
+  spec:
+   containers:
+    - name: bookstore
+    image: <repository server>/bookstore:latest
+    ports:
+     - containerPort: 80
+    imagePullSecrets:
+     - name: regsecret
