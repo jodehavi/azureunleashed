@@ -12,7 +12,12 @@ This template will deploy the lab vm with all required components pre-installed 
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
+When this is complete do the following steps:
 
+1) SSH into your VM `ssh <username>@<PublicIP>
+2) `cd /var/www/azureunleashed/Fabrikam-Bookstore`
+3) `php artisan serve --host=0.0.0.0`
+4) Browse to the site at <publicip>:8000
    
 ## Kubernetes Setup  
 The following steps will run through the process of creating a Kubernetes cluster on Azure Container Service using the Azure CLI 2.0
