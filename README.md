@@ -1,11 +1,9 @@
 # Azure Unleashed
-Artifacts for the Azure Unleashed Sessions - reference architecture and guidance of moving a real word application into Azure and modernizing it
+Artifacts for the Azure Unleashed Session - Containerize your application. Guidance of moving an application into Azure via containers.
 
-1. Fabrikam Bookstore
+The app is called Fabrikam Bookstore. This is a bookstore application that is relatively simple. It lists books and allows users to purchase them. Built in PHP using the Laravel Framework. Backend is a MySQL Database.
 
-    This is a bookstore application. Built in PHP using the Laravel Framework. Backend is a MySQL Database.
-
-    Details on how to setup the initial bookstore app are [here](Fabrikam-Bookstore/readme.md)
+Details on how to setup the initial bookstore app locally are [here](Fabrikam-Bookstore/readme.md)
 
 ## Deploy Lab VM
 This template will deploy the lab vm with all required components pre-installed (git, docker, azure cli 2.0, etc)
