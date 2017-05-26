@@ -151,18 +151,20 @@ export AZURE_LOCATION=westus
 # VHD_URL=https://mystorageaccount.blob.core.windows.net/mycontainer/mydatadisk.vhd
 # (end)
 ```
-5) Using nano, update the _bookstore-mysql.yaml_ file replacing storage account name and vhd url under the _volumes_ section with the values outputted from step 4.
+5) Exit the container using `exit`
 
-6) Deploy MySQL to the Kubernetes cluster
+6) Using nano, update the _bookstore-mysql.yaml_ file replacing storage account name and vhd url under the _volumes_ section with the values outputted from step 4.
+
+7) Deploy MySQL to the Kubernetes cluster
 ```
 kubectl create -f bookstore-mysql.yaml
 watch kubectl get pods
 ```
-7) Expose MySQL service on the cluster via port 3306
+8) Expose MySQL service on the cluster via port 3306
 ```
 kubectl expose deployments bookstore-mysql --port=3306
 ```
-8) Create the database and seed it with initial data. Use `kubectl get pods` to get the pod name. The last command should show a list of databases of which one should be *fabrikam_bookstore*.
+9) Create the database and seed it with initial data. Use `kubectl get pods` to get the pod name. The last command should show a list of databases of which one should be *fabrikam_bookstore*.
 ```
 kubectl exec -i <mysql-pod-name> -- mysql -uroot -p<password> < Fabrikam-Bookstore/dbscripts/master_setup.sql
 kubectl exec -i <mysql-pod-name> -- mysql -uroot -p<password> < Fabrikam-Bookstore/dbscripts/dbload.sql
