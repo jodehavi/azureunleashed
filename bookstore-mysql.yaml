@@ -1,20 +1,7 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql
-  labels:
-    app: mysql
-spec:
-  type: ClusterIP
-  ports:
-    - port: 3306
-  selector:
-    app: mysql
-
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
- name: bookstore
+ name: bookstore-mysql
 spec:
  replicas: 1
  template:
@@ -39,5 +26,5 @@ spec:
    volumes:
     - name: mysql-persistent-storage
       azureDisk:
-       diskName: <name_of_data_disk>.vhd
-       diskURI: https://<storage_account>.blob.core.windows.net/vhds/<name_of_data_disk>.vhd
+       diskName: <disk_name>.vhd
+       diskURI: https://<storageaccountname>.blob.core.windows.net/vhds/<disk_name>.vhd

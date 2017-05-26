@@ -123,17 +123,19 @@ $ watch 'kubectl get svc'
 ## MySQL in a container
 The following steps will walk you through the process of moving the MySQL DB into a container and deploying it to your kubernetes cluster
 
-1) Create mysql password for root
+1) Create a MySQL password for the _root_ user for use across the cluster
 ```
 $ kubectl create secret generic mysql --from-literal=password=YOUR_PASSWORD
 ```
 
-2) Run the following docker commands to pull the azure-tools image and start it up
+2) Run the following docker commands to pull the [azure-tools](https://github.com/colemickens/azure-tools) image and start it up. This is used to create a blank vhd for persistent storage for MySQL. When [managed disks are supported](https://github.com/Azure/acs-engine/pull/144) this will be much simpler.
 ```
 $ docker pull docker.io/colemickens/azure-tools:latest
 $ docker run -it docker.io/colemickens/azure-tools:latest
 ```
-3) Execute the following commands inside the container to create the empty disk for mysql
+3) This will trigger the azure cli. Login into Azure using the code shown.
+
+4) Execute the following commands inside the container to create the empty disk for mysql. **Note** that you need an existing storage account to use for this. 
 ```
 $ export AZURE_SUBSCRIPTION_ID=<your_subscription_id>
 $ export AZURE_RESOURCE_GROUP=<resource_group_name>
@@ -143,31 +145,54 @@ $ export IMAGE_SIZE=10G
 $ export AZURE_LOCATION=westus
 
 $ ./make-vhd.sh
-# VHD_URL=https://colemickvhds2.blob.core.windows.net/colemickvhds2/data-disk-082916103645.vhd
+# VHD_URL=https://mystorageaccount.blob.core.windows.net/mycontainer/mydatadisk.vhd
 # (end)
 ```
-4) Update bookstore-mysql.yaml replacing storage account name and vhd url
-5) Update .env under Fabrikam-Bookstore to the following:
-6) Set servername to mysqlpod
-7) Set user to root
-8) Set password to the one you set earlier
-9) Remove bookstore deployments
-```
-$ kubectl delete deployment bookstore
-```
-10) Repush updated web app container
-```
-$ docker build -t <registryname>.azurecr.io/bookstore .
-$ docker push <registryname>.azurecr.io/bookstore
-```
-11) Deploy the bookstore with MySQL to your cluster
+5) Using nano, update the _bookstore-mysql.yaml_ file replacing storage account name and vhd url under the _volumes_ section with the values outputted from step 4.
+
+6) Deploy MySQL to the Kubernetes cluster
 ```
 $ kubectl create -f bookstore-mysql.yaml
-$ kubectl get pods
+$ watch kubectl get pods
 ```
-12) Re-deploy the bookstore web app to your cluster
+7) Expose MySQL service on the cluster via port 3306
 ```
-$ kubectl create -f bookstore.yaml
-$ kubectl get pods
+$ kubectl expose deployments bookstore-mysql --port=3306
+```
+8) Create the database and seed it with initial data. Use `kubectl get pods` to get the pod name. The last command should show a list of databases of which one should be *fabrikam_bookstore*.
+```
+kubectl exec -i <mysql-pod-name> -- mysql -uroot -p<password> < Fabrikam-Bookstore/dbscripts/master_setup.sql
+kubectl exec -i <mysql-pod-name> -- mysql -uroot -p<password> < Fabrikam-Bookstore/dbscripts/dbload.sql
+kubectl exec -i <mysql-pod-name> -- mysql -uroot -p<password> -e"SHOW DATABASES;"
 ```
 
+## Update app to point to MySQL in a container
+1) Update the database section in the .env file under Fabrikam-Bookstore to the following - note that db_host is now _bookstore-mysql_:
+```
+DB_CONNECTION=mysql
+DB_HOST=bookstore-mysql
+DB_PORT=3306
+DB_DATABASE=fabrikam_bookstore
+DB_USERNAME=root
+DB_PASSWORD=<password>
+```
+2) Execute the `docker build` command to build your container image. **Note**: The first part of the container image name MUST be your container registry fully qualified name (i.e. myregistry.azurecr.io)
+```
+$ docker build -t <registryname>.azurecr.io/bookstore .
+```
+3) Push your newly created image to your private Azure Container Registry
+```
+$ docker push <registryname>.azurecr.io/bookstore
+```
+4) Remove the _bookstore_ deployment from the kubernetes cluster as well as the service
+```
+$ kubectl delete deployment bookstore
+$ kubectl delete service bookstore
+```
+5) Redeploy the bookstore app and expose it
+```
+$ kubectl create -f bookstore.yaml
+$ kubectl expose deployments bookstore --port=80 --type=LoadBalancer
+$ watch 'kubectl get svc'
+```
+6) Once the public ip is available you should be able to browse to the site.
