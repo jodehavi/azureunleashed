@@ -16,7 +16,7 @@ When this is complete do the following steps:
 
 1) SSH into your VM `ssh <username>@<PublicIP>`
 2) `cd /var/www/azureunleashed/Fabrikam-Bookstore`
-3) `php artisan serve --host=0.0.0.0`
+3) `sudo php artisan serve --host=0.0.0.0`
 4) Browse to the site at <publicip>:8000
    
 ## Kubernetes Setup  
